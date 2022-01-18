@@ -25,24 +25,29 @@ const AddEdit = () => {
   const [state, setState] = useState(initialState);
   const { name, age } = state;
   const history = useHistory();
+  
   const { id } = useParams();
 
   useEffect(() => {
-    const docRef = doc(usersCollectionRef, id);
+    if(id){
+      const docRef = doc(usersCollectionRef, id);
 
-    const getUsers = async () => {
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setState({ ...docSnap.data() });
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        setState({ ...initialState });
-      }
-    };
-
-    getUsers();
-  }, [id]);
+      const getUsers = async () => {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setState({ ...docSnap.data() });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          setState({ ...initialState });
+        }
+      };
+  
+      getUsers();
+  
+    }
+    
+  }, [id, usersCollectionRef]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
